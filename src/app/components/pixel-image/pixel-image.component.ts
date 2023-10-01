@@ -1,45 +1,67 @@
-import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+  OnChanges,
+  SimpleChanges,
+  Input,
+} from '@angular/core';
 import { ImageService } from 'src/app/services/image.service';
 
 @Component({
   selector: 'app-pixel-image',
   templateUrl: './pixel-image.component.html',
-  styleUrls: ['./pixel-image.component.scss']
+  styleUrls: ['./pixel-image.component.scss'],
 })
-export class PixelImageComponent implements AfterViewInit{
-
-  constructor(private imageService: ImageService){}
-
-  @ViewChild("imageCanvas")
+export class PixelImageComponent implements AfterViewInit, OnChanges {
+  @Input() num: number = 0;
+  @Input() isTrue: boolean = false;
+  imageSource:string = "";
+  constructor(private imageService: ImageService) {}
+  @ViewChild('imageCanvas')
   canvas: ElementRef<HTMLCanvasElement>;
 
-  ngAfterViewInit(): void {
-    this.imageService.imageSource$.subscribe({
-      next: imgSrc => {
+  ngOnChanges(changes: SimpleChanges): void {
+    this.updateImage();
+  }
 
-
-    const context = this.canvas.nativeElement.getContext("2d");
+  updateImage() {
     const image = new Image();
 
     image.onload = () => {
       this.canvas.nativeElement.width = image.width / 2;
       this.canvas.nativeElement.height = image.height / 2;
-      this.toPixel(image)
-    }
+      this.toPixel(image, this.num);
+    };
 
-    image.src = imgSrc;
+    image.src = this.imageSource;
   }
-})
+  ngAfterViewInit(): void {
+    this.imageService.imageSource$.subscribe({
+      next: (imgSrc) => {
+        // const context = this.canvas.nativeElement.getContext('2d');
+        const image = new Image();
+
+        image.onload = () => {
+          this.canvas.nativeElement.width = image.width / 2;
+          this.canvas.nativeElement.height = image.height / 2;
+          this.toPixel(image, this.num);
+        };
+
+        image.src = imgSrc;
+        this.imageSource = imgSrc;
+      },
+    });
   }
 
-  toPixel(image) {
-
+  toPixel(image, number) {
     const canvasW = this.canvas.nativeElement.width;
     const canvasH = this.canvas.nativeElement.height;
 
     //TODO: dinamic
-    const blockSize = 10;
-    const context = this.canvas.nativeElement.getContext("2d");
+    const blockSize = number;
+    const context = this.canvas.nativeElement.getContext('2d');
     // const image = new Image();
 
     // image.onload = () => {
@@ -55,8 +77,8 @@ export class PixelImageComponent implements AfterViewInit{
     context.drawImage(image, 0, 0, canvasW, canvasH);
 
     //Iterate trought the blocks and apply pixelation
-    for (let x = 0; x < NumBlocksX; x++){
-      for (let y = 0; y < NumBlocksY; y++){
+    for (let x = 0; x < NumBlocksX; x++) {
+      for (let y = 0; y < NumBlocksY; y++) {
         //Get the data of average color of the block
         const blockX = x * blockSize;
         const blocky = y * blockSize;
@@ -72,7 +94,7 @@ export class PixelImageComponent implements AfterViewInit{
         let sumG = 0;
         let sumB = 0;
 
-        for (let i = 0; i < imageData.data.length; i +=4){
+        for (let i = 0; i < imageData.data.length; i += 4) {
           sumR += imageData.data[i];
           sumG += imageData.data[i + 1];
           sumB += imageData.data[i + 2];
@@ -90,7 +112,7 @@ export class PixelImageComponent implements AfterViewInit{
           r: averageR,
           g: averageG,
           b: averageB,
-        }
+        };
 
         //TODO: make dynamic
         const closeColor = this.findCloserColor(
@@ -100,21 +122,17 @@ export class PixelImageComponent implements AfterViewInit{
 
         context.fillStyle = closeColor;
         context.fillRect(blockX, blocky, blockSize, blockSize);
-
-
       }
-
     }
-
   }
 
-  private findCloserColor(color, pallete){
+  private findCloserColor(color, pallete) {
     let closerColor = pallete[0];
     let minDistance = this.caclDistanceColor(color, closerColor);
 
-    for(let i = 1; i < pallete.length; i++){
+    for (let i = 1; i < pallete.length; i++) {
       const distance = this.caclDistanceColor(color, pallete[i]);
-      if (distance < minDistance){
+      if (distance < minDistance) {
         minDistance = distance;
         closerColor = pallete[i];
       }
@@ -142,19 +160,18 @@ export class PixelImageComponent implements AfterViewInit{
     const g = Math.round(color.g);
     const b = Math.round(color.b);
 
-    return `#${r.toString(16).padStart(2, "0")}${g
+    return `#${r.toString(16).padStart(2, '0')}${g
       .toString(16)
-      .padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+      .padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
   }
 
   paletaDeColores = [
-    "#FF0000", // Rojo
-    "#00FF00", // Verde
-    "#0000FF", // Azul
-    "#FFFF00", // Amarillo
-    "#ffffff",
-    "#000000",
+    '#FF0000', // Rojo
+    '#00FF00', // Verde
+    '#0000FF', // Azul
+    '#FFFF00', // Amarillo
+    '#ffffff',
+    '#000000',
     // Agrega más colores según tus preferencias
   ];
-
 }

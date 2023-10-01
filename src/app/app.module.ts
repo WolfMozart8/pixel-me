@@ -5,12 +5,14 @@ import { AppComponent } from './app.component';
 import { ImageComponent } from './components/image/image.component';
 import { FormsModule } from '@angular/forms';
 import { PixelImageComponent } from './components/pixel-image/pixel-image.component';
+import { ControlsComponent } from './components/controls/controls.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ImageComponent,
-    PixelImageComponent
+    PixelImageComponent,
+    ControlsComponent
   ],
   imports: [
     BrowserModule,
