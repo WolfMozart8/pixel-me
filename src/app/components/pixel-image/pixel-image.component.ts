@@ -15,12 +15,19 @@ import { ImageService } from 'src/app/services/image.service';
   styleUrls: ['./pixel-image.component.scss'],
 })
 export class PixelImageComponent implements AfterViewInit, OnChanges {
-  @Input() num: number = 0;
-  @Input() isTrue: boolean = false;
-  imageSource:string = "";
-  constructor(private imageService: ImageService) {}
+
   @ViewChild('imageCanvas')
   canvas: ElementRef<HTMLCanvasElement>;
+
+  @Input() num: number = 5;
+  @Input() palette= [];
+  imageSource:string = "";
+
+  pixelsX: number = 0;
+  pixelsY: number = 0;
+
+  constructor(private imageService: ImageService) {}
+
 
   ngOnChanges(changes: SimpleChanges): void {
     this.updateImage();
@@ -73,6 +80,10 @@ export class PixelImageComponent implements AfterViewInit, OnChanges {
     const NumBlocksX = canvasW / blockSize;
     const NumBlocksY = canvasH / blockSize;
 
+    //text
+    this.pixelsX = Math.round(NumBlocksX);
+    this.pixelsY = Math.round(NumBlocksY);
+
     //Draw the pixelated image
     context.drawImage(image, 0, 0, canvasW, canvasH);
 
@@ -117,7 +128,7 @@ export class PixelImageComponent implements AfterViewInit, OnChanges {
         //TODO: make dynamic
         const closeColor = this.findCloserColor(
           this.rgbToHex(avgColor),
-          this.paletaDeColores
+          this.palette
         );
 
         context.fillStyle = closeColor;
