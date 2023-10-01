@@ -4,11 +4,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { ImageComponent } from './components/image/image.component';
 import { FormsModule } from '@angular/forms';
+import { PixelImageComponent } from './components/pixel-image/pixel-image.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ImageComponent
+    ImageComponent,
+    PixelImageComponent
   ],
   imports: [
     BrowserModule,

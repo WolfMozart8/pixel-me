@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ImageService } from 'src/app/services/image.service';
 
 @Component({
   selector: 'app-image',
@@ -7,12 +8,10 @@ import { Component } from '@angular/core';
 })
 export class ImageComponent {
 
+  constructor(private imageService: ImageService){}
+
   imageSource: string = "";
   isImageLoaded: boolean = false;
-
-  asd() {
-    console.log(this.imageSource)
-  }
 
   loadImage(input: any) {
     if (input.files && input.files[0]){
@@ -20,6 +19,8 @@ export class ImageComponent {
 
       reader.onload = (e) => {
         const displayImage: any = document.getElementById("img");
+        this.imageService.imageSource = e.target.result;
+        this.imageService.setImageSrc(e.target.result.toString())
         displayImage.src = e.target?.result;
       }
       reader.readAsDataURL(input.files[0]);
