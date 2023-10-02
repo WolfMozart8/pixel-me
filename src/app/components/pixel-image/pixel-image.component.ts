@@ -15,19 +15,17 @@ import { ImageService } from 'src/app/services/image.service';
   styleUrls: ['./pixel-image.component.scss'],
 })
 export class PixelImageComponent implements AfterViewInit, OnChanges {
-
   @ViewChild('imageCanvas')
   canvas: ElementRef<HTMLCanvasElement>;
 
   @Input() num: number = 5;
-  @Input() palette= [];
-  imageSource:string = "";
+  @Input() palette = [];
+  imageSource: string = '';
 
   pixelsX: number = 0;
   pixelsY: number = 0;
 
   constructor(private imageService: ImageService) {}
-
 
   ngOnChanges(changes: SimpleChanges): void {
     this.updateImage();
@@ -37,27 +35,21 @@ export class PixelImageComponent implements AfterViewInit, OnChanges {
     const image = new Image();
 
     image.onload = () => {
-      this.canvas.nativeElement.width = image.width / 2;
-      this.canvas.nativeElement.height = image.height / 2;
+      this.canvas.nativeElement.width = image.width;
+      this.canvas.nativeElement.height = image.height;
       this.toPixel(image, this.num);
     };
 
     image.src = this.imageSource;
   }
+
   ngAfterViewInit(): void {
     this.imageService.imageSource$.subscribe({
       next: (imgSrc) => {
         // const context = this.canvas.nativeElement.getContext('2d');
-        const image = new Image();
 
-        image.onload = () => {
-          this.canvas.nativeElement.width = image.width / 2;
-          this.canvas.nativeElement.height = image.height / 2;
-          this.toPixel(image, this.num);
-        };
-
-        image.src = imgSrc;
         this.imageSource = imgSrc;
+        this.updateImage();
       },
     });
   }
@@ -66,21 +58,14 @@ export class PixelImageComponent implements AfterViewInit, OnChanges {
     const canvasW = this.canvas.nativeElement.width;
     const canvasH = this.canvas.nativeElement.height;
 
-    //TODO: dinamic
     const blockSize = number;
     const context = this.canvas.nativeElement.getContext('2d');
-    // const image = new Image();
-
-    // image.onload = () => {
-    //   context.drawImage(image, 0, 0)
-    // }
-
-    // image.src = "/assets/image 62.png"
 
     const NumBlocksX = canvasW / blockSize;
     const NumBlocksY = canvasH / blockSize;
 
-    //text
+
+    //text for pixels
     this.pixelsX = Math.round(NumBlocksX);
     this.pixelsY = Math.round(NumBlocksY);
 
@@ -131,10 +116,37 @@ export class PixelImageComponent implements AfterViewInit, OnChanges {
           this.palette
         );
 
+        //TODO: make dinamically change between dots and squares
+        // blocks
         context.fillStyle = closeColor;
         context.fillRect(blockX, blocky, blockSize, blockSize);
+
+        const borderWidth = 0.5;
+
+        if (closeColor === "#000000") {
+
+          context.strokeStyle = '#ffffff'; // Color del borde (negro en este caso)
+        }else {
+
+          context.strokeStyle = '#000000'; // Color del borde (negro en este caso)
+        }
+
+        context.lineWidth = borderWidth;
+        context.strokeRect(
+          blockX + borderWidth / 2,
+          blocky + borderWidth / 2,
+          blockSize - borderWidth,
+          blockSize - borderWidth
+        );
+
+        // circles
+        context.fillStyle = closeColor;
+        // context.beginPath();
+        // context.arc(blockX, blocky, blockSize / 2, 0, 2 * Math.PI);
+        // context.fill();
       }
     }
+
   }
 
   private findCloserColor(color, pallete) {
