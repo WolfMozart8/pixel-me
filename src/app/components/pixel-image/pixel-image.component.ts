@@ -7,6 +7,7 @@ import {
   SimpleChanges,
   Input,
 } from '@angular/core';
+import { BORDER } from 'src/app/models/ENUM_BORDER';
 import { ImageService } from 'src/app/services/image.service';
 
 @Component({
@@ -20,6 +21,9 @@ export class PixelImageComponent implements AfterViewInit, OnChanges {
 
   @Input() num: number = 5;
   @Input() palette = [];
+
+  @Input() borderType: BORDER = BORDER.NONE;
+
   imageSource: string = '';
 
   pixelsX: number = 0;
@@ -29,14 +33,15 @@ export class PixelImageComponent implements AfterViewInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.updateImage();
+    console.log(changes)
   }
 
   updateImage() {
     const image = new Image();
 
     image.onload = () => {
-      this.canvas.nativeElement.width = image.width;
-      this.canvas.nativeElement.height = image.height;
+      this.canvas.nativeElement.width = image.width * 4;
+      this.canvas.nativeElement.height = image.height * 4;
       this.toPixel(image, this.num);
     };
 
@@ -54,12 +59,21 @@ export class PixelImageComponent implements AfterViewInit, OnChanges {
     });
   }
 
+  downloadImage() {
+    const dataURL = this.canvas.nativeElement.toDataURL("image/png");
+
+    const link = document.createElement("a");
+    link.href = dataURL;
+    link.download = "pixel_image.png";
+
+    link.click();
+  }
   toPixel(image, number) {
     const canvasW = this.canvas.nativeElement.width;
     const canvasH = this.canvas.nativeElement.height;
 
     const blockSize = number;
-    const context = this.canvas.nativeElement.getContext('2d');
+    const context = this.canvas.nativeElement.getContext('2d', {willReadFrequently: true});
 
     const NumBlocksX = canvasW / blockSize;
     const NumBlocksY = canvasH / blockSize;
@@ -121,15 +135,27 @@ export class PixelImageComponent implements AfterViewInit, OnChanges {
         context.fillStyle = closeColor;
         context.fillRect(blockX, blocky, blockSize, blockSize);
 
+        if (this.borderType != 0){
+
         const borderWidth = 0.5;
 
-        if (closeColor === "#000000") {
-
-          context.strokeStyle = '#ffffff'; // Color del borde (negro en este caso)
-        }else {
-
-          context.strokeStyle = '#000000'; // Color del borde (negro en este caso)
+        if (this.borderType === BORDER.BLACK){
+          context.strokeStyle = '#000000';
         }
+        else if (this.borderType === BORDER.WHITE){
+          context.strokeStyle = '#ffffff';
+        }
+        else if (this.borderType === BORDER.MIX){
+
+          if (closeColor === "#000000") {
+
+            context.strokeStyle = '#ffffff';
+          }else {
+
+            context.strokeStyle = '#000000'; // Color del borde (negro en este caso)
+          }
+        }
+
 
         context.lineWidth = borderWidth;
         context.strokeRect(
@@ -138,6 +164,7 @@ export class PixelImageComponent implements AfterViewInit, OnChanges {
           blockSize - borderWidth,
           blockSize - borderWidth
         );
+        }
 
         // circles
         context.fillStyle = closeColor;

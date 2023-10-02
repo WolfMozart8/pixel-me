@@ -1,9 +1,54 @@
-<app-pixel-image [num]="num" [palette]="pallete"></app-pixel-image>
+<app-pixel-image [num]="num"
+ [palette]="pallete"
+ [borderType]="borderType"
+></app-pixel-image>
+<!-- [borderBlack]="border.black" [borderWhite]="border.white" -->
+<!-- [borderMix]="border.mix" -->
 
 <div class="flex flex-row gap-1 bg-slate-100 w-fit p-1 m-auto select-none">
-    <div  *ngFor="let color of paleta2, index as i" class=" flex flex-col w-6 border-2 border-indigo-900 text-transparent">
-        <div class="cursor-pointer" (click)="activateColor(i)" [style]="'background-color: ' + color.color + ';'">{{color}}</div>
+    <div *ngFor="let color of colors, index as i"
+        class=" flex flex-col w-6 border-2 border-indigo-900 text-transparent">
+        <div class="cursor-pointer" (click)="activateColor(i)" [style]="'background-color: ' + color.color + ';'">
+            {{color}}</div>
         <div [ngClass]="color.use ? 'bg-green-400' : 'bg-red-500'" class="w-2 h-2 rounded-full m-auto mt-1"></div>
     </div>
 </div>
 <input class="w-full" type="range" min="3" max="40" value="8" [(ngModel)]="num">
+
+<!-- <div>
+    <div>
+        <input type="checkbox" name="border" id="none" [(ngModel)]="border.none">
+    </div>
+    <div>
+        <input (input)="a()" type="checkbox" name="border" id="black" [(ngModel)]="border.black">
+    </div>
+</div> -->
+
+<div class="flex flex-col">
+    <fieldset >
+        <legend>border</legend>
+
+        <div>
+
+            <label class="mr-2" for="none">none</label>
+            <input (input)="selectBorder($event)" checked type="radio" name="border" id="none" value="none">
+        </div>
+        <div>
+
+            <label class="mr-2" for="black">black</label>
+            <input (input)="selectBorder($event)" type="radio" name="border" id="black" value="black">
+        </div>
+        <div>
+            <label class="mr-2" for="white">white</label>
+            <input (input)="selectBorder($event)" type="radio" name="border" id="white" value="white">
+
+        </div>
+        <div>
+            <label class="mr-2" for="mix">mix</label>
+            <input (input)="selectBorder($event)" type="radio" name="border" id="mix" value="mix">
+
+
+
+        </div>
+    </fieldset>
+</div>
