@@ -3,6 +3,7 @@ import {
   ElementRef,
   ViewChild,
   AfterViewInit,
+  OnInit,
   OnChanges,
   SimpleChanges,
   Input,
@@ -15,11 +16,12 @@ import { ImageService } from 'src/app/services/image.service';
   templateUrl: './pixel-image.component.html',
   styleUrls: ['./pixel-image.component.scss'],
 })
-export class PixelImageComponent implements AfterViewInit, OnChanges {
+export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
   @ViewChild('imageCanvas')
   canvas: ElementRef<HTMLCanvasElement>;
 
-  @Input() num: number = 5;
+  @Input() num: number;
+  @Input() resolution: number = 0.5;
   @Input() palette = [];
 
   @Input() borderType: BORDER = BORDER.NONE;
@@ -32,6 +34,10 @@ export class PixelImageComponent implements AfterViewInit, OnChanges {
   isZoomIn: boolean = false;
 
   constructor(private imageService: ImageService) {}
+  ngOnInit(): void {
+    this.resolution = 0.5;
+    this.num = 5;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.updateImage();
@@ -43,8 +49,8 @@ export class PixelImageComponent implements AfterViewInit, OnChanges {
 
     image.onload = () => {
       //TODO: make dinamyc width/heigth
-      this.canvas.nativeElement.width = image.width;
-      this.canvas.nativeElement.height = image.height;
+      this.canvas.nativeElement.width = image.width * this.resolution;
+      this.canvas.nativeElement.height = image.height * this.resolution;
       this.toPixel(image, this.num);
     };
 

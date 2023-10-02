@@ -1,6 +1,7 @@
 <app-pixel-image [num]="num"
  [palette]="pallete"
  [borderType]="borderType"
+ [resolution]="resolution"
 ></app-pixel-image>
 <!-- [borderBlack]="border.black" [borderWhite]="border.white" -->
 <!-- [borderMix]="border.mix" -->
@@ -13,7 +14,7 @@
         <div [ngClass]="color.use ? 'bg-green-400' : 'bg-red-500'" class="w-2 h-2 rounded-full m-auto mt-1"></div>
     </div>
 </div>
-<input class="w-full" type="range" min="3" max="40" value="8" [(ngModel)]="num">
+<input class="w-full" type="range" min="3" max="40" [(ngModel)]="num">
 
 <!-- <div>
     <div>
@@ -23,6 +24,13 @@
         <input (input)="a()" type="checkbox" name="border" id="black" [(ngModel)]="border.black">
     </div>
 </div> -->
+<label for="resolution">resolution</label>
+<select class="text-indigo-900" name="resolution" id="resolution" [(ngModel)]="resolution">
+    <option value="0.25">x0.25</option>
+    <option value="0.5" selected>x0.5</option>
+    <option value="1">x1</option>
+    <option value="2">x2</option>
+</select>
 
 <div class="flex flex-col">
     <fieldset >

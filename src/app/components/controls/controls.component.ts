@@ -12,7 +12,8 @@ export class ControlsComponent implements OnInit{
     this.getActivatedColor();
   }
 
-  num: number = 0;
+  num: number = 5;
+  resolution: number = 0.5;
 
   pallete = [];
 
