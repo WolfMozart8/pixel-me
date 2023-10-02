@@ -1,3 +1,6 @@
 <div>X: {{pixelsX}} Y: {{pixelsY}}</div>
-<canvas class="w-full" #imageCanvas></canvas>
+<button (click)="isZoomIn = !isZoomIn">Zoom {{isZoomIn ? "On" : "Off"}}</button>
+<div class="w-full" [ngClass]="isZoomIn ? 'max-h-80 overflow-auto': ''">
+    <canvas [ngClass]="isZoomIn ? '' : 'w-full'" #imageCanvas></canvas>
+</div>
 <button class="ml-auto block bg-slate-100 text-indigo-900 rounded-md p-2 hover:bg-slate-300" (click)="downloadImage()">Download</button>

@@ -29,6 +29,8 @@ export class PixelImageComponent implements AfterViewInit, OnChanges {
   pixelsX: number = 0;
   pixelsY: number = 0;
 
+  isZoomIn: boolean = false;
+
   constructor(private imageService: ImageService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -40,8 +42,9 @@ export class PixelImageComponent implements AfterViewInit, OnChanges {
     const image = new Image();
 
     image.onload = () => {
-      this.canvas.nativeElement.width = image.width * 4;
-      this.canvas.nativeElement.height = image.height * 4;
+      //TODO: make dinamyc width/heigth
+      this.canvas.nativeElement.width = image.width;
+      this.canvas.nativeElement.height = image.height;
       this.toPixel(image, this.num);
     };
 
@@ -137,7 +140,7 @@ export class PixelImageComponent implements AfterViewInit, OnChanges {
 
         if (this.borderType != 0){
 
-        const borderWidth = 0.5;
+        const borderWidth = 1;
 
         if (this.borderType === BORDER.BLACK){
           context.strokeStyle = '#000000';

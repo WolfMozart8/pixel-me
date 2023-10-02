@@ -1,10 +1,10 @@
-<div class="w-full flex justify-center items-center min-h-[300px] border-2">
-    <img *ngIf="isImageLoaded; else loadimage" alt="image" id="img">
-    <ng-template #loadimage>
-        <input (change)="loadImage($event.target)" type="file" name="image-file" id="imageInput" accept="image/*">
-    </ng-template>
-</div>
 <div class="flex justify-center items-center bg-slate-200 text-slate-800" *ngIf="isImageLoaded">
     <label class="flex-1 text-center" for="imageInput" class="btn">Seleccionar otra imagen</label>
     <input class="hidden" (change)="loadImage($event.target)" type="file" name="image-file" id="imageInput" accept="image/*">
+</div>
+<div class="w-full flex justify-center items-center min-h-[300px] border-2">
+    <img class="" *ngIf="isImageLoaded; else loadimage" alt="image" id="img">
+    <ng-template #loadimage>
+        <input (change)="loadImage($event.target)" type="file" name="image-file" id="imageInput" accept="image/*">
+    </ng-template>
 </div>
