@@ -1,6 +1,24 @@
-<div>X: {{pixelsX}} Y: {{pixelsY}}</div>
-<button (click)="isZoomIn = !isZoomIn">Zoom {{isZoomIn ? "On" : "Off"}}</button>
-<div class="w-full" [ngClass]="isZoomIn ? 'max-h-80 overflow-auto': ''">
-    <canvas [ngClass]="isZoomIn ? '' : 'w-full'" #imageCanvas></canvas>
+<div class="mt-6">
+    <p>X: {{pixelsX}}</p>
+    <p>Y: {{pixelsY}}</p>
 </div>
-<button class="ml-auto block bg-slate-100 text-indigo-900 rounded-md p-2 hover:bg-slate-300" (click)="downloadImage()">Download</button>
+<div class="flex justify-end">
+    <button matTooltip="Zoom In" *ngIf="!isZoomIn" mat-icon-button (click)="isZoomIn = !isZoomIn">
+        <mat-icon>zoom_in</mat-icon>
+    </button>
+    <button matTooltip="Zoom out" *ngIf="isZoomIn" mat-icon-button (click)="isZoomIn = !isZoomIn">
+        <mat-icon>zoom_out</mat-icon>
+    </button>
+</div>
+
+<div class="w-full relative" [ngClass]="isZoomIn ? 'max-h-80 overflow-auto' : ''">
+    <canvas [ngClass]="isZoomIn ? '' : 'w-full'" #imageCanvas></canvas>
+    <div class="absolute top-0 left-0 right-0 bottom-0 z-10 flex justify-center items-center" *ngIf="isLoading">
+        <mat-spinner></mat-spinner>
+    </div>
+</div>
+<div class="flex justify-end my-6">
+    <button mat-fab matTooltip="Download image" class="block rounded-md" (click)="downloadImage()">
+        <mat-icon>save_alt</mat-icon>
+    </button>
+</div>

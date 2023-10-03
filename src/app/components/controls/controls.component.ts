@@ -44,7 +44,7 @@ export class ControlsComponent implements OnInit{
     }
   ];
 
-  border = {
+  grid = {
     none: false,
     black: false,
     white: false,
@@ -87,10 +87,10 @@ export class ControlsComponent implements OnInit{
 
   }
 
-  resetBorder() {
-    this.border.black = false;
-    this.border.white = false;
-    this.border.mix = false;
+  resetGrid() {
+    this.grid.black = false;
+    this.grid.white = false;
+    this.grid.mix = false;
 
   }
 

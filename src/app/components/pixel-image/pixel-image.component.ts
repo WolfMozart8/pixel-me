@@ -32,6 +32,7 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
   pixelsY: number = 0;
 
   isZoomIn: boolean = false;
+  isLoading: boolean = false;
 
   constructor(private imageService: ImageService) {}
   ngOnInit(): void {
@@ -41,17 +42,17 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.updateImage();
-    console.log(changes)
   }
 
   updateImage() {
+    this.isLoading = true;
     const image = new Image();
 
     image.onload = () => {
-      //TODO: make dinamyc width/heigth
       this.canvas.nativeElement.width = image.width * this.resolution;
       this.canvas.nativeElement.height = image.height * this.resolution;
       this.toPixel(image, this.num);
+      this.isLoading = false;
     };
 
     image.src = this.imageSource;
@@ -60,12 +61,11 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
   ngAfterViewInit(): void {
     this.imageService.imageSource$.subscribe({
       next: (imgSrc) => {
-        // const context = this.canvas.nativeElement.getContext('2d');
-
         this.imageSource = imgSrc;
         this.updateImage();
       },
     });
+    this.isLoading = false;
   }
 
   downloadImage() {
