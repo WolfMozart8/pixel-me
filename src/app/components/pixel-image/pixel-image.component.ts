@@ -11,6 +11,7 @@ import {
 import { Color, ColorHex } from 'src/app/models/Color';
 import { BORDER } from 'src/app/models/ENUM_BORDER';
 import { ImageService } from 'src/app/services/image.service';
+import { PaletteService } from 'src/app/services/palette.service';
 
 @Component({
   selector: 'app-pixel-image',
@@ -18,6 +19,8 @@ import { ImageService } from 'src/app/services/image.service';
   styleUrls: ['./pixel-image.component.scss'],
 })
 export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
+
+
   @ViewChild('imageCanvas')
   canvas: ElementRef<HTMLCanvasElement>;
 
@@ -41,7 +44,7 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
   isZoomIn: boolean = false;
   isLoading: boolean = false;
 
-  constructor(private imageService: ImageService) {}
+  constructor(private imageService: ImageService, private paletteService: PaletteService) {}
   ngOnInit(): void {
     this.resolution = 0.5;
     this.pixelLevel = 5;
@@ -49,6 +52,8 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.updateImage();
+
+
   }
 
   updateImage() {
@@ -64,6 +69,7 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
       this.toPixel(image, this.pixelLevel);
       this.isLoading = false;
       this.totalPixels = this.getTotalPixels(this.colorUsed);
+      this.setQuntity();
     };
 
     image.src = this.imageSource;
@@ -263,6 +269,10 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
       sum += object[color];
     }
     return sum;
+  }
+
+  setQuntity() {
+    this.paletteService.setQuantityPixels(this.colorUsed);
   }
 
 }
