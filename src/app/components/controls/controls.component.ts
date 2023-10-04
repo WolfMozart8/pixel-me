@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Color, ColorHex } from 'src/app/models/Color';
 import { BORDER } from 'src/app/models/ENUM_BORDER';
+import { PaletteService } from 'src/app/services/palette.service';
 
 @Component({
   selector: 'app-controls',
@@ -9,58 +10,20 @@ import { BORDER } from 'src/app/models/ENUM_BORDER';
 })
 export class ControlsComponent implements OnInit{
 
+  constructor(private paletteService: PaletteService){}
+
   ngOnInit(): void {
     this.resolution = 0.5;
+    this.colors = this.paletteService.getPalette();
     this.getActivatedColor();
   }
 
-  num: number = 5;
+  pixelLevel: number = 5;
   resolution: number = 0.5;
 
   pallete: ColorHex[] = [];
 
-  colors: Color[] = [
-    {
-      color: "#ff0000",
-      use: true
-    },
-    {
-      color: "#00ff00",
-      use: true
-    },
-    {
-      color: "#0000ff",
-      use: true
-    },
-    {
-      color: "#ffff00",
-      use: true
-    },
-    {
-      color: "#ffffff",
-      use: true
-    },
-    {
-      color: "#000000",
-      use: true
-    },
-    // {
-    //   color: "#999999",
-    //   use: true
-    // },
-    // {
-    //   color: "#8e0e8e",
-    //   use: true
-    // },
-    // {
-    //   color: "#ff9797",
-    //   use: true
-    // },
-    // {
-    //   color: "#ce7e00",
-    //   use: true
-    // },
-  ];
+  colors: Color[] = [];
 
   grid = {
     none: false,
@@ -97,9 +60,9 @@ export class ControlsComponent implements OnInit{
 
   getActivatedColor() {
     this.pallete = [];
-    this.colors.forEach(a => {
-      if (a.use === true){
-        this.pallete.push(a.color)
+    this.colors.forEach(color => {
+      if (color.use === true){
+        this.pallete.push(color.color)
       }
     })
 
@@ -110,6 +73,13 @@ export class ControlsComponent implements OnInit{
     this.grid.white = false;
     this.grid.mix = false;
 
+  }
+
+  addColor(color){
+
+    this.paletteService.addColor(color);
+    this.colors = this.paletteService.getPalette();
+    this.getActivatedColor();
   }
 
 }

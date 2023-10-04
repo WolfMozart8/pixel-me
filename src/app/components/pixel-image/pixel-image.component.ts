@@ -21,7 +21,7 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
   @ViewChild('imageCanvas')
   canvas: ElementRef<HTMLCanvasElement>;
 
-  @Input() num: number;
+  @Input() pixelLevel: number;
   @Input() resolution: number = 0.5;
   @Input() palette = [];
 
@@ -44,7 +44,7 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
   constructor(private imageService: ImageService) {}
   ngOnInit(): void {
     this.resolution = 0.5;
-    this.num = 5;
+    this.pixelLevel = 5;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -61,7 +61,7 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
     image.onload = () => {
       this.canvas.nativeElement.width = image.width * this.resolution;
       this.canvas.nativeElement.height = image.height * this.resolution;
-      this.toPixel(image, this.num);
+      this.toPixel(image, this.pixelLevel);
       this.isLoading = false;
       this.totalPixels = this.getTotalPixels(this.colorUsed);
     };
