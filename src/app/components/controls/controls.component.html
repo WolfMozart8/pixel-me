@@ -2,13 +2,13 @@
     <h3>Resolution</h3>
     <mat-button-toggle-group name="resolution" [(ngModel)]="resolution">
         <mat-button-toggle value="0.25">x0.25</mat-button-toggle>
-        <mat-button-toggle value="0.5">x0.5</mat-button-toggle>
+        <mat-button-toggle checked value="0.5">x0.5</mat-button-toggle>
         <mat-button-toggle value="1">x1</mat-button-toggle>
         <mat-button-toggle value="2">x2</mat-button-toggle>
     </mat-button-toggle-group>
 </div>
 
-<app-pixel-image [num]="num" [palette]="pallete" [borderType]="borderType" [resolution]="resolution"></app-pixel-image>
+<app-pixel-image [num]="num" [palette]="pallete" [gridType]="borderType" [resolution]="resolution"></app-pixel-image>
 
 
 <div class="flex flex-row gap-1 bg-slate-100 w-fit p-1 m-auto select-none">

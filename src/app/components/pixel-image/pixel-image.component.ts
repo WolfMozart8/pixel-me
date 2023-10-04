@@ -8,6 +8,7 @@ import {
   SimpleChanges,
   Input,
 } from '@angular/core';
+import { Color, ColorHex } from 'src/app/models/Color';
 import { BORDER } from 'src/app/models/ENUM_BORDER';
 import { ImageService } from 'src/app/services/image.service';
 
@@ -24,9 +25,15 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
   @Input() resolution: number = 0.5;
   @Input() palette = [];
 
-  @Input() borderType: BORDER = BORDER.NONE;
+  @Input() gridType: BORDER = BORDER.NONE;
 
   imageSource: string = '';
+  colorUsed2 = [];
+  colorUsed = {}
+  colorNameList = [];
+  colorNumList = [];
+
+  totalPixels: number = 0;
 
   pixelsX: number = 0;
   pixelsY: number = 0;
@@ -48,11 +55,15 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
     this.isLoading = true;
     const image = new Image();
 
+    // reset array
+    this.colorUsed = {}
+
     image.onload = () => {
       this.canvas.nativeElement.width = image.width * this.resolution;
       this.canvas.nativeElement.height = image.height * this.resolution;
       this.toPixel(image, this.num);
       this.isLoading = false;
+      this.totalPixels = this.getTotalPixels(this.colorUsed);
     };
 
     image.src = this.imageSource;
@@ -144,17 +155,23 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
         context.fillStyle = closeColor;
         context.fillRect(blockX, blocky, blockSize, blockSize);
 
-        if (this.borderType != 0){
+
+        // sum every related color
+        this.sumColor(closeColor);
+
+
+
+        if (this.gridType != 0){
 
         const borderWidth = 1;
 
-        if (this.borderType === BORDER.BLACK){
+        if (this.gridType === BORDER.BLACK){
           context.strokeStyle = '#000000';
         }
-        else if (this.borderType === BORDER.WHITE){
+        else if (this.gridType === BORDER.WHITE){
           context.strokeStyle = '#ffffff';
         }
-        else if (this.borderType === BORDER.MIX){
+        else if (this.gridType === BORDER.MIX){
 
           if (closeColor === "#000000") {
 
@@ -185,7 +202,7 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
 
   }
 
-  private findCloserColor(color, pallete) {
+  private findCloserColor(color: ColorHex, pallete: ColorHex[]): ColorHex {
     let closerColor = pallete[0];
     let minDistance = this.caclDistanceColor(color, closerColor);
 
@@ -214,7 +231,7 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
     );
   }
 
-  private rgbToHex(color) {
+  private rgbToHex(color): ColorHex {
     const r = Math.round(color.r);
     const g = Math.round(color.g);
     const b = Math.round(color.b);
@@ -224,13 +241,28 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
       .padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
   }
 
-  paletaDeColores = [
-    '#FF0000', // Rojo
-    '#00FF00', // Verde
-    '#0000FF', // Azul
-    '#FFFF00', // Amarillo
-    '#ffffff',
-    '#000000',
-    // Agrega más colores según tus preferencias
-  ];
+  /**
+   * Add + 1 to a color every time is used, if null it creates a new color and is
+   * added to colorUsed.
+   *
+   * Example: {"#ff0000": 50}
+   * @param color Hex color (#ff0000)
+   */
+  private sumColor(color: ColorHex): void {
+    if (!this.colorUsed[color]) {
+      this.colorUsed[color] = 0;
+    }
+
+    this.colorUsed[color]++;
+  }
+
+  private getTotalPixels(object): number {
+    let sum: number = 0;
+
+    for (let color in object) {
+      sum += object[color];
+    }
+    return sum;
+  }
+
 }

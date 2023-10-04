@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Color, ColorHex } from 'src/app/models/Color';
 import { BORDER } from 'src/app/models/ENUM_BORDER';
 
 @Component({
@@ -9,15 +10,16 @@ import { BORDER } from 'src/app/models/ENUM_BORDER';
 export class ControlsComponent implements OnInit{
 
   ngOnInit(): void {
+    this.resolution = 0.5;
     this.getActivatedColor();
   }
 
   num: number = 5;
   resolution: number = 0.5;
 
-  pallete = [];
+  pallete: ColorHex[] = [];
 
-  colors = [
+  colors: Color[] = [
     {
       color: "#ff0000",
       use: true
@@ -41,7 +43,23 @@ export class ControlsComponent implements OnInit{
     {
       color: "#000000",
       use: true
-    }
+    },
+    // {
+    //   color: "#999999",
+    //   use: true
+    // },
+    // {
+    //   color: "#8e0e8e",
+    //   use: true
+    // },
+    // {
+    //   color: "#ff9797",
+    //   use: true
+    // },
+    // {
+    //   color: "#ce7e00",
+    //   use: true
+    // },
   ];
 
   grid = {
