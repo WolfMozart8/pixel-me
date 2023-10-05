@@ -19,8 +19,6 @@ import { PaletteService } from 'src/app/services/palette.service';
   styleUrls: ['./pixel-image.component.scss'],
 })
 export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
-
-
   @ViewChild('imageCanvas')
   canvas: ElementRef<HTMLCanvasElement>;
 
@@ -32,7 +30,7 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
 
   imageSource: string = '';
   colorUsed2 = [];
-  colorUsed = {}
+  colorUsed = {};
   colorNameList = [];
   colorNumList = [];
 
@@ -44,7 +42,10 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
   isZoomIn: boolean = false;
   isLoading: boolean = false;
 
-  constructor(private imageService: ImageService, private paletteService: PaletteService) {}
+  constructor(
+    private imageService: ImageService,
+    private paletteService: PaletteService
+  ) {}
   ngOnInit(): void {
     this.resolution = 0.5;
     this.pixelLevel = 5;
@@ -52,8 +53,6 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.updateImage();
-
-
   }
 
   updateImage() {
@@ -61,7 +60,7 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
     const image = new Image();
 
     // reset array
-    this.colorUsed = {}
+    this.colorUsed = {};
 
     image.onload = () => {
       this.canvas.nativeElement.width = image.width * this.resolution;
@@ -86,11 +85,11 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
   }
 
   downloadImage() {
-    const dataURL = this.canvas.nativeElement.toDataURL("image/png");
+    const dataURL = this.canvas.nativeElement.toDataURL('image/png');
 
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = dataURL;
-    link.download = "pixel_image.png";
+    link.download = 'pixel_image.png';
 
     link.click();
   }
@@ -99,11 +98,12 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
     const canvasH = this.canvas.nativeElement.height;
 
     const blockSize = number;
-    const context = this.canvas.nativeElement.getContext('2d', {willReadFrequently: true});
+    const context = this.canvas.nativeElement.getContext('2d', {
+      willReadFrequently: true,
+    });
 
     const NumBlocksX = canvasW / blockSize;
     const NumBlocksY = canvasH / blockSize;
-
 
     //text for pixels
     this.pixelsX = Math.round(NumBlocksX);
@@ -129,16 +129,19 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
         let sumR = 0;
         let sumG = 0;
         let sumB = 0;
+        let sumA = 0;
 
         for (let i = 0; i < imageData.data.length; i += 4) {
           sumR += imageData.data[i];
           sumG += imageData.data[i + 1];
           sumB += imageData.data[i + 2];
+          sumA += imageData.data[i + 3];
         }
 
         const averageR = sumR / (blockSize * blockSize);
         const averageG = sumG / (blockSize * blockSize);
         const averageB = sumB / (blockSize * blockSize);
+        const averageA = sumA / (blockSize * blockSize);
 
         // Fill blocks with average color
         // context.fillStyle = `rgb(${averageR}, ${averageG}, ${averageB})`;
@@ -148,6 +151,7 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
           r: averageR,
           g: averageG,
           b: averageB,
+          a: averageA,
         };
 
         //TODO: make dynamic
@@ -158,44 +162,36 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
 
         //TODO: make dinamically change between dots and squares
         // blocks
+
         context.fillStyle = closeColor;
         context.fillRect(blockX, blocky, blockSize, blockSize);
-
 
         // sum every related color
         this.sumColor(closeColor);
 
+        // add border to blocks to emulate a gris
+        if (this.gridType != 0) {
+          const borderWidth = 1;
 
-
-        if (this.gridType != 0){
-
-        const borderWidth = 1;
-
-        if (this.gridType === BORDER.BLACK){
-          context.strokeStyle = '#000000';
-        }
-        else if (this.gridType === BORDER.WHITE){
-          context.strokeStyle = '#ffffff';
-        }
-        else if (this.gridType === BORDER.MIX){
-
-          if (closeColor === "#000000") {
-
+          if (this.gridType === BORDER.BLACK) {
+            context.strokeStyle = '#000000';
+          } else if (this.gridType === BORDER.WHITE) {
             context.strokeStyle = '#ffffff';
-          }else {
-
-            context.strokeStyle = '#000000'; // Color del borde (negro en este caso)
+          } else if (this.gridType === BORDER.MIX) {
+            if (closeColor === '#000000') {
+              context.strokeStyle = '#ffffff';
+            } else {
+              context.strokeStyle = '#000000'; // Color del borde (negro en este caso)
+            }
           }
-        }
 
-
-        context.lineWidth = borderWidth;
-        context.strokeRect(
-          blockX + borderWidth / 2,
-          blocky + borderWidth / 2,
-          blockSize - borderWidth,
-          blockSize - borderWidth
-        );
+          context.lineWidth = borderWidth;
+          context.strokeRect(
+            blockX + borderWidth / 2,
+            blocky + borderWidth / 2,
+            blockSize - borderWidth,
+            blockSize - borderWidth
+          );
         }
 
         // circles
@@ -205,10 +201,14 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
         // context.fill();
       }
     }
-
   }
 
   private findCloserColor(color: ColorHex, pallete: ColorHex[]): ColorHex {
+    // if transparent return not color
+    if (color === '#null') {
+      return '#00000000';
+    }
+
     let closerColor = pallete[0];
     let minDistance = this.caclDistanceColor(color, closerColor);
 
@@ -241,10 +241,18 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
     const r = Math.round(color.r);
     const g = Math.round(color.g);
     const b = Math.round(color.b);
+    const a = Math.round(color.a);
 
-    return `#${r.toString(16).padStart(2, '0')}${g
+    if (a === 0) {
+      const noColor: ColorHex = `#null`;
+      return noColor;
+    }
+
+    const convertedColor: ColorHex = `#${r.toString(16).padStart(2, '0')}${g
       .toString(16)
       .padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+
+    return convertedColor;
   }
 
   /**
@@ -274,5 +282,4 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
   setQuntity() {
     this.paletteService.setQuantityPixels(this.colorUsed);
   }
-
 }

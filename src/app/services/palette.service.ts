@@ -30,6 +30,11 @@ export class PaletteService {
     {
       color: "#000000",
       use: true
+    },
+    //transparent
+    {
+      color: "#00000000",
+      use: true
     }
   ];
 
