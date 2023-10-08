@@ -42,8 +42,10 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
   isZoomIn: boolean = false;
   isLoading: boolean = false;
 
-  @Input() isSmooth:boolean = true;
+  @Input() isSmooth: boolean = true;
   // @Input() smooth: ImageSmoothingQuality = "low";
+
+  @Input() blockMode: boolean = false;
 
   constructor(
     private imageService: ImageService,
@@ -68,12 +70,14 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
     image.onload = () => {
       this.canvas.nativeElement.width = image.width * this.resolution;
       this.canvas.nativeElement.height = image.height * this.resolution;
-      this.toPixel(image, this.pixelLevel);
+      // this.canvas.nativeElement.width = 600;
+      // this.canvas.nativeElement.height = 400;
+      this.toPixel(image, this.pixelLevel, this.blockMode);
       this.isLoading = false;
       this.totalPixels = this.getTotalPixels(this.colorUsed);
+
       this.setQuntity();
     };
-
     image.src = this.imageSource;
   }
 
@@ -96,7 +100,7 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
 
     link.click();
   }
-  toPixel(image, number) {
+  toPixel(image, number, mode) {
     const canvasW = this.canvas.nativeElement.width;
     const canvasH = this.canvas.nativeElement.height;
 
@@ -117,6 +121,8 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
 
     //Draw the pixelated image
     context.drawImage(image, 0, 0, canvasW, canvasH);
+    //TODO: choose selected area from the original image
+    // context.drawImage(image,100, 120, 140, 180, 0, 0, canvasW, canvasH);
 
     //Iterate trought the blocks and apply pixelation
     for (let x = 0; x < NumBlocksX; x++) {
@@ -167,15 +173,24 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
         );
 
         //TODO: make dinamically change between dots and squares
-        // blocks
-
         context.fillStyle = closeColor;
-        context.fillRect(blockX, blocky, blockSize, blockSize);
+
+        // circles
+        if (mode){
+        context.beginPath();
+        context.arc(blockX, blocky, blockSize / 2, 0, 2 * Math.PI);
+        context.fill();
+        }
+        // blocks
+        else {
+
+          context.fillRect(blockX, blocky, blockSize, blockSize);
+        }
 
         // sum every related color
         this.sumColor(closeColor);
 
-        // add border to blocks to emulate a gris
+        // add border to blocks to emulate a grid
         if (this.gridType != 0) {
           const borderWidth = this.gridWidth;
 
@@ -187,7 +202,7 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
             if (closeColor === '#000000') {
               context.strokeStyle = '#ffffff';
             } else {
-              context.strokeStyle = '#000000'; // Color del borde (negro en este caso)
+              context.strokeStyle = '#000000';
             }
           }
 
@@ -199,12 +214,6 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
             blockSize - borderWidth
           );
         }
-
-        // circles
-        context.fillStyle = closeColor;
-        // context.beginPath();
-        // context.arc(blockX, blocky, blockSize / 2, 0, 2 * Math.PI);
-        // context.fill();
       }
     }
   }
@@ -277,9 +286,9 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
   }
 
   private resetPrioSum(): void {
-    this.palette.forEach(color => {
+    this.palette.forEach((color) => {
       // color.
-    })
+    });
   }
 
   private getTotalPixels(object): number {
@@ -302,20 +311,22 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
     this.zoomLevel--;
   }
   getZoomLevel(): string {
-    if (this.zoomLevel === 0){
-      return "w-[50%]";
-    }
-    else if (this.zoomLevel === 1){
-      return "w-[100%]";
-    }
-    else if (this.zoomLevel === 2){
-      return "w-[150%]";
-    }
-    else if (this.zoomLevel === 3){
-      return "w-[200%]";
-    }
-    else {
-      return "w-[100%]";
+    if (this.zoomLevel === 0) {
+      return 'w-[50%]';
+    } else if (this.zoomLevel === 1) {
+      return 'w-[100%]';
+    } else if (this.zoomLevel === 2) {
+      return 'w-[150%]';
+    } else if (this.zoomLevel === 3) {
+      return 'w-[200%]';
+    } else if (this.zoomLevel === 4) {
+      return 'w-[300%]';
+    } else if (this.zoomLevel === 5) {
+      return 'w-[400%]';
+    } else if (this.zoomLevel === 6) {
+      return 'w-[600%]';
+    } else {
+      return 'w-[100%]';
     }
   }
 }

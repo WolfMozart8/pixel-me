@@ -65,6 +65,6 @@ export class PaletteService {
         color.quantity = 0;
       }
     })
-    console.table(this.palette)
+    // console.table(this.palette)
   }
 }

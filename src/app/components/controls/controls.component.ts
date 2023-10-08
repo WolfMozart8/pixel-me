@@ -22,6 +22,8 @@ export class ControlsComponent implements OnInit{
   resolution: number = 0.5;
   isSmooth: boolean = true;
   smooth: ImageSmoothingQuality = "low";
+  blockMode: boolean = false;
+  blocks: string = "";
 
   pallete: ColorHex[] = [];
 
@@ -85,6 +87,15 @@ export class ControlsComponent implements OnInit{
     this.paletteService.addColor(color);
     this.colors = this.paletteService.getPalette();
     this.getActivatedColor();
+  }
+
+  changeMode(): boolean {
+    if (this.blocks === "circle") {
+      return true
+    }
+    else {
+      return false
+    }
   }
 
 }
