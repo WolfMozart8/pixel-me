@@ -8,7 +8,7 @@ import {
   SimpleChanges,
   Input,
 } from '@angular/core';
-import { Color, ColorHex } from 'src/app/models/Color';
+import { ColorHex } from 'src/app/models/Color';
 import { BORDER } from 'src/app/models/ENUM_BORDER';
 import { ImageService } from 'src/app/services/image.service';
 import { PaletteService } from 'src/app/services/palette.service';
@@ -21,6 +21,8 @@ import { PaletteService } from 'src/app/services/palette.service';
 export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
   @ViewChild('imageCanvas')
   canvas: ElementRef<HTMLCanvasElement>;
+  @ViewChild('imageCanvas2')
+  canvas2: ElementRef<HTMLCanvasElement>;
 
   @Input() pixelLevel: number;
   @Input() resolution: number = 0.5;
@@ -46,6 +48,7 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
   // @Input() smooth: ImageSmoothingQuality = "low";
 
   @Input() blockMode: boolean = false;
+  bgColorForCircleMode: string = "grey";
 
   constructor(
     private imageService: ImageService,
@@ -177,13 +180,17 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
 
         // circles
         if (mode){
+        // first paint the block using bgColorForCircleMode color to avoid showing original image
+        context.fillStyle = this.bgColorForCircleMode;
+        context.fillRect(blockX, blocky, blockSize, blockSize);
+        // then fill with the circle with closeColor
+        context.fillStyle = closeColor;
         context.beginPath();
         context.arc(blockX, blocky, blockSize / 2, 0, 2 * Math.PI);
         context.fill();
         }
         // blocks
         else {
-
           context.fillRect(blockX, blocky, blockSize, blockSize);
         }
 

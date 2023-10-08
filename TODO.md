@@ -7,3 +7,4 @@ add 3d model
 add dynamic colors
 focus hovered colors in image
 --improve zoom--
+measures in cm
