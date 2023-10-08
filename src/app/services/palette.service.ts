@@ -58,13 +58,13 @@ export class PaletteService {
   }
 
   setQuantityPixels(object) {
-    for (let color in object){
-      this.palette.forEach(colorInPallette => {
-        if (colorInPallette.color === color){
-          colorInPallette.quantity = object[color];
-        }
-      })
-    }
-    console.log(this.palette)
+    this.palette.forEach(color => {
+      if (object[color.color]) {
+        color.quantity = object[color.color];
+      } else{
+        color.quantity = 0;
+      }
+    })
+    console.table(this.palette)
   }
 }

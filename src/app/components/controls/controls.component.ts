@@ -20,6 +20,8 @@ export class ControlsComponent implements OnInit{
 
   pixelLevel: number = 5;
   resolution: number = 0.5;
+  isSmooth: boolean = true;
+  smooth: ImageSmoothingQuality = "low";
 
   pallete: ColorHex[] = [];
 
@@ -54,6 +56,9 @@ export class ControlsComponent implements OnInit{
   }
   activateColor(index) {
     this.colors[index].use = !this.colors[index].use;
+    if (!this.colors[index].use) {
+      this.colors[index].quantity = 0;
+    }
     this.getActivatedColor()
     console.log(this.pallete)
   }

@@ -34,6 +34,8 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
   colorNameList = [];
   colorNumList = [];
 
+  readonly gridWidth: number = 0.5;
+
   totalPixels: number = 0;
 
   pixelsX: number = 0;
@@ -41,6 +43,9 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
 
   isZoomIn: boolean = false;
   isLoading: boolean = false;
+
+  @Input() isSmooth:boolean = true;
+  @Input() smooth: ImageSmoothingQuality = "low";
 
   constructor(
     private imageService: ImageService,
@@ -68,6 +73,8 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
       this.toPixel(image, this.pixelLevel);
       this.isLoading = false;
       this.totalPixels = this.getTotalPixels(this.colorUsed);
+      console.log(this.colorUsed);
+
       this.setQuntity();
     };
 
@@ -101,6 +108,9 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
     const context = this.canvas.nativeElement.getContext('2d', {
       willReadFrequently: true,
     });
+
+    context.imageSmoothingEnabled = this.isSmooth;
+    this.colorUsed = {};
 
     const NumBlocksX = canvasW / blockSize;
     const NumBlocksY = canvasH / blockSize;
@@ -171,7 +181,7 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
 
         // add border to blocks to emulate a gris
         if (this.gridType != 0) {
-          const borderWidth = 1;
+          const borderWidth = this.gridWidth;
 
           if (this.gridType === BORDER.BLACK) {
             context.strokeStyle = '#000000';
@@ -268,6 +278,12 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
     }
 
     this.colorUsed[color]++;
+  }
+
+  private resetPrioSum(): void {
+    this.palette.forEach(color => {
+      // color.
+    })
   }
 
   private getTotalPixels(object): number {

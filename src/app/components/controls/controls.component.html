@@ -7,12 +7,14 @@
         <mat-button-toggle value="2">x2</mat-button-toggle>
         <mat-button-toggle value="3">x3</mat-button-toggle>
         <mat-button-toggle value="4">x4</mat-button-toggle>
+        <mat-button-toggle value="8">x8</mat-button-toggle>
     </mat-button-toggle-group>
 </div>
 
+<button (click)="isSmooth = !isSmooth">SUave</button>
 
 <app-pixel-image [pixelLevel]="pixelLevel" [palette]="pallete" [gridType]="borderType"
-    [resolution]="resolution"></app-pixel-image>
+    [resolution]="resolution" [isSmooth]="isSmooth" [smooth]="smooth"></app-pixel-image>
 
 
 <div class="flex flex-row gap-1 bg-slate-100 w-full p-1 m-auto select-none overflow-auto">
