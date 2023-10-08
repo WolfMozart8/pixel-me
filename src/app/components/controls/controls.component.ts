@@ -23,7 +23,7 @@ export class ControlsComponent implements OnInit{
   isSmooth: boolean = true;
   smooth: ImageSmoothingQuality = "low";
   blockMode: boolean = false;
-  blocks: string = "";
+  blocks: string = "square";
 
   pallete: ColorHex[] = [];
 

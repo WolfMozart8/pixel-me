@@ -14,7 +14,7 @@
 <div>
     <h3>Blocks</h3>
     <mat-button-toggle-group name="blocks" [(ngModel)]="blocks">
-        <mat-button-toggle value="square">square</mat-button-toggle>
+        <mat-button-toggle checked value="square">square</mat-button-toggle>
         <mat-button-toggle value="circle">circle</mat-button-toggle>
     </mat-button-toggle-group>
 </div>
@@ -23,7 +23,7 @@
 <!-- <button (click)="isSmooth = !isSmooth">SUave</button> -->
 
 <app-pixel-image [pixelLevel]="pixelLevel" [palette]="pallete" [gridType]="borderType"
-    [resolution]="resolution" [isSmooth]="isSmooth" [blockMode]="changeMode()"></app-pixel-image>
+    [resolution]="resolution" [isSmooth]="isSmooth" [circleBlockMode]="changeMode()"></app-pixel-image>
 
 
 <div class="flex flex-row gap-1 bg-slate-100 w-full p-1 m-auto select-none overflow-auto">
@@ -55,7 +55,7 @@
 
 <div class="bg-indigo-50 my-4 mb-16 rounded-sm px-2 flex justify-between items-center">
     <label class="text-indigo-900" for="grid-options">Grid</label>
-    <mat-radio-group id="grid-options">
+    <mat-radio-group id="grid-options" [disabled]="blocks != 'square'">
         <mat-radio-button class="ml-3" checked (input)="selectBorder($event)" value="none">None</mat-radio-button>
         <mat-radio-button class="ml-3" (input)="selectBorder($event)" value="black">Black</mat-radio-button>
         <mat-radio-button class="ml-3" (input)="selectBorder($event)" value="white">White</mat-radio-button>

@@ -47,7 +47,7 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
   @Input() isSmooth: boolean = true;
   // @Input() smooth: ImageSmoothingQuality = "low";
 
-  @Input() blockMode: boolean = false;
+  @Input() circleBlockMode: boolean = false;
   bgColorForCircleMode: string = "grey";
 
   constructor(
@@ -75,7 +75,7 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
       this.canvas.nativeElement.height = image.height * this.resolution;
       // this.canvas.nativeElement.width = 600;
       // this.canvas.nativeElement.height = 400;
-      this.toPixel(image, this.pixelLevel, this.blockMode);
+      this.toPixel(image, this.pixelLevel, this.circleBlockMode);
       this.isLoading = false;
       this.totalPixels = this.getTotalPixels(this.colorUsed);
 
@@ -198,7 +198,8 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
         this.sumColor(closeColor);
 
         // add border to blocks to emulate a grid
-        if (this.gridType != 0) {
+        // grid only works in blocks mode
+        if (this.gridType != 0 && !mode) {
           const borderWidth = this.gridWidth;
 
           if (this.gridType === BORDER.BLACK) {
@@ -302,7 +303,10 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
     let sum: number = 0;
 
     for (let color in object) {
-      sum += object[color];
+      // if not transparent
+      if (color != "#00000000"){
+        sum += object[color];
+      }
     }
     return sum;
   }
