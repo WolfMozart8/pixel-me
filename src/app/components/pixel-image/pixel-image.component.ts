@@ -29,10 +29,7 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
   @Input() gridType: BORDER = BORDER.NONE;
 
   imageSource: string = '';
-  colorUsed2 = [];
   colorUsed = {};
-  colorNameList = [];
-  colorNumList = [];
 
   readonly gridWidth: number = 0.5;
 
@@ -41,11 +38,12 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
   pixelsX: number = 0;
   pixelsY: number = 0;
 
+  zoomLevel: number = 1; // 0 = width: 50%; 1 = width: 100% ...
   isZoomIn: boolean = false;
   isLoading: boolean = false;
 
   @Input() isSmooth:boolean = true;
-  @Input() smooth: ImageSmoothingQuality = "low";
+  // @Input() smooth: ImageSmoothingQuality = "low";
 
   constructor(
     private imageService: ImageService,
@@ -73,8 +71,6 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
       this.toPixel(image, this.pixelLevel);
       this.isLoading = false;
       this.totalPixels = this.getTotalPixels(this.colorUsed);
-      console.log(this.colorUsed);
-
       this.setQuntity();
     };
 
@@ -109,8 +105,8 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
       willReadFrequently: true,
     });
 
+    //TODO:
     context.imageSmoothingEnabled = this.isSmooth;
-    this.colorUsed = {};
 
     const NumBlocksX = canvasW / blockSize;
     const NumBlocksY = canvasH / blockSize;
@@ -297,5 +293,29 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
 
   setQuntity() {
     this.paletteService.setQuantityPixels(this.colorUsed);
+  }
+
+  zoomIn(): void {
+    this.zoomLevel++;
+  }
+  zoomOut(): void {
+    this.zoomLevel--;
+  }
+  getZoomLevel(): string {
+    if (this.zoomLevel === 0){
+      return "w-[50%]";
+    }
+    else if (this.zoomLevel === 1){
+      return "w-[100%]";
+    }
+    else if (this.zoomLevel === 2){
+      return "w-[150%]";
+    }
+    else if (this.zoomLevel === 3){
+      return "w-[200%]";
+    }
+    else {
+      return "w-[100%]";
+    }
   }
 }
