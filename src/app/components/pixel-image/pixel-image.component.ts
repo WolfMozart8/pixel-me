@@ -21,8 +21,8 @@ import { PaletteService } from 'src/app/services/palette.service';
 export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
   @ViewChild('imageCanvas')
   canvas: ElementRef<HTMLCanvasElement>;
-  @ViewChild('imageCanvas2')
-  canvas2: ElementRef<HTMLCanvasElement>;
+  // @ViewChild('imageCanvas2')
+  // canvas2: ElementRef<HTMLCanvasElement>;
 
   @Input() pixelLevel: number;
   @Input() resolution: number = 0.5;
@@ -49,6 +49,9 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
 
   @Input() circleBlockMode: boolean = false;
   bgColorForCircleMode: string = "grey";
+
+  hamaSmall: number = 0.266;
+  hamaBig: number = 0.5
 
   constructor(
     private imageService: ImageService,
