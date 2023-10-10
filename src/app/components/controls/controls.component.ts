@@ -21,7 +21,7 @@ export class ControlsComponent implements OnInit{
   pixelLevel: number = 5;
   resolution: number = 0.5;
   isSmooth: boolean = true;
-  smooth: ImageSmoothingQuality = "low";
+  // smooth: ImageSmoothingQuality = "low";
   blockMode: boolean = false;
   blocks: string = "square";
 
@@ -41,7 +41,7 @@ export class ControlsComponent implements OnInit{
 
   selectderBorder = "";
 
-  selectBorder(event) {
+  selectBorder(event): void {
     const value = event.target.value;
     if (value === "none"){
       this.borderType = BORDER.NONE
@@ -56,7 +56,7 @@ export class ControlsComponent implements OnInit{
       this.borderType = BORDER.MIX
     }
   }
-  activateColor(index) {
+  activateColor(index): void {
     this.colors[index].use = !this.colors[index].use;
     if (!this.colors[index].use) {
       this.colors[index].quantity = 0;
@@ -65,7 +65,7 @@ export class ControlsComponent implements OnInit{
     console.log(this.pallete)
   }
 
-  getActivatedColor() {
+  getActivatedColor(): void {
     this.pallete = [];
     this.colors.forEach(color => {
       if (color.use === true){
@@ -75,18 +75,24 @@ export class ControlsComponent implements OnInit{
 
   }
 
-  resetGrid() {
+  resetGrid(): void {
     this.grid.black = false;
     this.grid.white = false;
     this.grid.mix = false;
 
   }
 
-  addColor(color){
+  addColor(color): void{
 
     this.paletteService.addColor(color);
     this.colors = this.paletteService.getPalette();
+
     this.getActivatedColor();
+  }
+
+  changeColor(id: number, event: any): void {
+    this.colors.filter(color => color.id === id)[0].color = event.target.value;
+    this.getActivatedColor()
   }
 
   changeMode(): boolean {
