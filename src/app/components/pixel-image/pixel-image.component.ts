@@ -135,10 +135,10 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
       for (let y = 0; y < NumBlocksY; y++) {
         //Get the data of average color of the block
         const blockX = x * blockSize;
-        const blocky = y * blockSize;
+        const blockY = y * blockSize;
         const imageData = context.getImageData(
           blockX,
-          blocky,
+          blockY,
           blockSize,
           blockSize
         );
@@ -185,16 +185,16 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
         if (mode){
         // first paint the block using bgColorForCircleMode color to avoid showing original image
         context.fillStyle = this.bgColorForCircleMode;
-        context.fillRect(blockX, blocky, blockSize, blockSize);
+        context.fillRect(blockX, blockY, blockSize, blockSize);
         // then fill with the circle with closeColor
         context.fillStyle = closeColor;
         context.beginPath();
-        context.arc(blockX, blocky, blockSize / 2, 0, 2 * Math.PI);
+        context.arc(blockX + 3, blockY + 3, blockSize / 2, 0, Math.PI * 2);
         context.fill();
         }
         // blocks
         else {
-          context.fillRect(blockX, blocky, blockSize, blockSize);
+          context.fillRect(blockX, blockY, blockSize, blockSize);
         }
 
         // sum every related color
@@ -220,7 +220,7 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
           context.lineWidth = borderWidth;
           context.strokeRect(
             blockX + borderWidth / 2,
-            blocky + borderWidth / 2,
+            blockY + borderWidth / 2,
             blockSize - borderWidth,
             blockSize - borderWidth
           );
