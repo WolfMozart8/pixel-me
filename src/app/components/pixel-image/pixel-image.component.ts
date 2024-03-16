@@ -189,7 +189,7 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
         // then fill with the circle with closeColor
         context.fillStyle = closeColor;
         context.beginPath();
-        context.arc(blockX + 3, blockY + 3, blockSize / 2, 0, Math.PI * 2);
+        context.arc(blockX + (blockSize / 2), blockY + (blockSize / 2), blockSize / 2, 0, Math.PI * 2);
         context.fill();
         }
         // blocks
