@@ -19,6 +19,7 @@ export class ControlsComponent implements OnInit{
   }
 
   pixelLevel: number = 5;
+  isPixelControlLocked: boolean = false;
   resolution: number = 0.5;
   isSmooth: boolean = true;
   // smooth: ImageSmoothingQuality = "low";
