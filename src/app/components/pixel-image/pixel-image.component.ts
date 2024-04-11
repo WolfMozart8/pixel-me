@@ -24,6 +24,9 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
   // @ViewChild('imageCanvas2')
   // canvas2: ElementRef<HTMLCanvasElement>;
 
+  @ViewChild('image')
+  originalImage: ElementRef<HTMLImageElement>;
+
   @Input() pixelLevel: number;
   @Input() resolution: number = 0.5;
   @Input() palette = [];
@@ -32,6 +35,10 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
 
   imageSource: string = '';
   colorUsed = {};
+
+  originalImageSize: number = 100;
+  compareImage: boolean = false;
+
 
   readonly gridWidth: number = 0.5;
 
@@ -343,4 +350,9 @@ export class PixelImageComponent implements AfterViewInit, OnChanges, OnInit {
       return 'w-[100%]';
     }
   }
+
+  getImageSizeComparation(): void {
+    this.originalImage.nativeElement.style.width = this.originalImageSize + "%"
+  }
+
 }

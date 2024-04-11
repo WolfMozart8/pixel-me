@@ -1,0 +1,9 @@
+.image-slider {
+    border-color: purple;
+    transition: border-right .2s,  box-shadow .2s;
+}
+
+.group:hover .image-slider {
+    border-right: 2px solid purple;
+    box-shadow: 0px 0px 20px 0px purple;
+}
